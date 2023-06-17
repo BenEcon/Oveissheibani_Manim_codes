@@ -38,19 +38,14 @@ class Photo(Scene):
        
      
        def update_time(mob,dt):
-        if(self.t_offset*3):
             self.t_offset += dt
             
        dummy = Mobject()
        dummy.add_updater(update_time)
        self.add(dummy)
-       self.wait(5)
+       self.wait(10)
        self.t_offset=0
-       self.wait(5)
-       self.t_offset=0
-       self.wait(5)
-       self.t_offset=0
-       self.wait(5)
+       self.wait(10)
        dummy.remove_updater(update_time)
-            
+       self.wait(10)
     
