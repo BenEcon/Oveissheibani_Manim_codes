@@ -37,22 +37,36 @@ class MaxwellsEquations(Scene):
         equations = VGroup(eq5, eq2, eq3, eq4).arrange(DOWN)
         self.play(Transform(eq1, equations))
 
-
 class SpeedOfLight(Scene):
     def construct(self):
         # Write down the speed of light equation
-        eq = MathTex("c = \\frac {1} {\\sqrt{\\mu_0 \\varepsilon_0}}")
+        eq = MathTex("c = \\frac {1} {\\sqrt{\\mu_0 \\varepsilon_0}}").shift(UP*3)
         self.play(Write(eq))
         self.wait(1)
 
         # Add explanation for epsilon0
-        arrow_to_eps = Arrow(start=DOWN, end=eq[0][7].get_center(), buff=0.1, color=BLUE)
+        arrow_to_eps = Arrow(start=UP*2, end=eq[0][7].get_center(), buff=0.1, color=BLUE)
         eps_desc = MathTex("\\varepsilon_0", ": \\text{Permittivity of free space}").next_to(arrow_to_eps, DOWN)
         self.play(Create(arrow_to_eps), Write(eps_desc))
         self.wait(1)
 
+        # Add value of epsilon0
+        eps_value = MathTex("\\varepsilon_0", "= 8.85 \\times 10^{-12} \\text{C}^{2} \\text{N}^{-1} \\text{m}^{-2}").next_to(eps_desc, DOWN)
+        self.play(Write(eps_value))
+        self.wait(4)
+
         # Add explanation for mu0
-        arrow_to_mu = Arrow(start=DOWN*3, end=eq[0][8].get_center(), buff=0.1, color=RED)
+        arrow_to_mu = Arrow(start=UP*0, end=eq[0][8].get_center(), buff=0.1, color=RED)
         mu_desc = MathTex("\\mu_0", ": \\text{Permeability of free space}").next_to(arrow_to_mu, DOWN)
         self.play(Create(arrow_to_mu), Write(mu_desc))
-        self.wait(2)
+        self.wait(4)
+
+        # Add value of mu0
+        mu_value = MathTex("\\mu_0", "= 4\\pi \\times 10^{-7} \\text{T m/A}").next_to(mu_desc, DOWN)
+        self.play(Write(mu_value))
+        self.wait(4)
+
+        # Calculate the speed of light
+        speed_of_light = MathTex("c", "= 299,792,458 \\text{ m/s}").next_to(mu_value, DOWN)
+        self.play(Write(speed_of_light))
+        self.wait(4)
