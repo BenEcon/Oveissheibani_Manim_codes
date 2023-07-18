@@ -1,52 +1,37 @@
 from manim import *
 import numpy as np
 
-class light(Scene):
+class lightclock(Scene):
     def construct(self):
-    
-       text=Text("At the level of absorbtion and emmision wave becomes particle like",width=self.camera.frame_width *0.9).shift(UP*3)
-       #self.add(text)
-       self.t_offset = 0
-       self.counter = ValueTracker(0) # ValueTracker for counter
-       counter_text = DecimalNumber(self.counter.get_value(), num_decimal_places=0).add_updater(lambda v: v.set_value(self.counter.get_value())) # Text to display counter
-       counter_text.to_corner(LEFT) # Place the text at the top left corner of the screen
-       self.add(counter_text) # Add the counter text to the screen
-       colors = color_gradient([YELLOW, RED], 2)
- 
-       def cos_func(t, A, freq, sigma,stop,ref,speed):
-            # Original wave
-            #wave =0
-          
-            # Center of Gaussian
-      
+        text=Text("A light clock is a universal based defined clock", width=self.camera.frame_width *0.9).shift(UP*3)
+        self.play(Write(text))
 
-            # Gaussian wave packet
-            t0 = ref*np.sin(self.t_offset*speed)
-            epsilon = 0.1  # adjust as needed for your scenario
-            if abs(t0 - ref) < epsilon or abs(t0 - (-1*ref)) < epsilon:
-                self.counter.increment_value()
-            # Superposition of the two waves
-            superposition =  A * np.exp(-(t-t0)**2 / (2*sigma**2))*(0.02)* np.sin((t+t0) * freq)
-      
-    
-            return superposition
-  
-       wave1= always_redraw(lambda: FunctionGraph(lambda t: cos_func(t,50  ,15,0.4,4.5,3,5),x_range=(-4,4), color=rgb_to_color([138/255,43/255,226/255])).shift(UP*2))
-   
-       self.add(wave1)
-       
-       
-       def update_time(mob,dt):
+        self.t_offset = 0
+        colors = color_gradient([YELLOW, RED], 2)
+
+        def update_time(mob, dt):
             self.t_offset += dt
-            
-         
-            
-            
-            
-       dummy = Mobject()
-       dummy.add_updater(update_time)
-       self.add(dummy)
-       self.wait(5)
-       dummy.remove_updater(update_time)
+        clock=self.create_light_clock(v=2, A=6, freq=10, sigma=0.1, name="wave", range=4)
+        dummy = Mobject()
+        dummy.add_updater(update_time)
+        self.add(dummy,clock)
+        self.wait(3)
+        dummy.remove_updater(update_time)
+
+
+
+
+    def create_light_clock(self,v, A, freq, sigma, name, range):
+        def update_objects():
+            def cos_func(t):
+                t0 = np.sin(self.t_offset * v)
+                phase = (t + t0) * freq
+                superposition = A * np.exp(-(t-t0)**2 / (2*sigma**2)) * (0.02) * np.sin(phase)
+                return superposition
+            wave= FunctionGraph(lambda t: cos_func(t), x_range=(-range, range), color=rgb_to_color([138/255, 43/255, 226/255])).shift(DOWN*3)
+            return VGroup(wave)
+        return always_redraw(update_objects)
+        
        
-    
+
+
